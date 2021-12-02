@@ -2,8 +2,10 @@ defmodule FirstTest do
   use ExUnit.Case
   alias First
 
-  test "read_file/1" do
-    assert {:ok, list} = First.read_file("fixture/first.txt")
+  test "read_file!/1" do
+    list = First.read_file!("fixture/first.txt")
+    assert Enum.all?(list, &is_integer/1)
+    assert [124, 125 | _rest] = list
   end
 
   test "count_larger_than_previous_measurements/1 with simple example" do
