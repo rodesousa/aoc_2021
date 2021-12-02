@@ -8,9 +8,9 @@ defmodule FirstTest do
     assert [124, 125 | _rest] = list
   end
 
-  test "count_larger_than_previous_measurements/1 with simple example" do
+  test "count_larger_than_previous_measurement/1 with simple example" do
     assert 7 ==
-             FT.count_larger_than_previous_measurements([
+             First.count_larger_than_previous_measurement([
                199,
                200,
                208,
@@ -24,9 +24,10 @@ defmodule FirstTest do
              ])
   end
 
-  test "count_larger_than_previous_measurements/1 with puzzle input" do
-    # assert ?? ==
-    #         "fixture/first.txt" |> FT.read_file() |> FT.count_larger_than_previous_measurements()
-    assert false
+  test "count_larger_than_previous_measurement/1 with puzzle input" do
+    assert 1559 ==
+             "fixture/first.txt"
+             |> First.read_file!()
+             |> First.count_larger_than_previous_measurement()
   end
 end

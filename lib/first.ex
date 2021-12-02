@@ -19,4 +19,22 @@ defmodule First do
     )
     |> Enum.reverse()
   end
+
+  @doc """
+  Count how many number are larger than the previous
+  """
+  @spec count_larger_than_previous_measurement([integer()]) :: integer()
+  def count_larger_than_previous_measurement(list) do
+    {count, _old} =
+      list
+      |> Enum.reduce({0, nil}, fn
+        measure, {0, nil} ->
+          {0, measure}
+
+        measure, {count, old} ->
+          if measure > old, do: {count + 1, measure}, else: {count, measure}
+      end)
+
+    count
+  end
 end
