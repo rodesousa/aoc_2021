@@ -1,7 +1,5 @@
 defmodule SecondAim do
   defstruct position: 0, depth: 0, aim: 0
-
-  @type t :: [position: integer, depth: integer, aim: integer]
 end
 
 defmodule Second do
@@ -9,8 +7,6 @@ defmodule Second do
   https://adventofcode.com/2021/day/2 
   """
   defstruct position: 0, depth: 0
-
-  @type t :: [position: integer, depth: integer]
 
   @doc """
   Reads the `pathfilename`
