@@ -14,59 +14,37 @@ defmodule Third do
     gama =
       File.stream!(pathfilename)
       |> Stream.map(&String.trim/1)
-      |> gama
+      |> Stream.map(&String.split(&1, "", trim: true))
+      |> Enum.zip()
+      |> Stream.map(fn line ->
+        line
+        |> Tuple.to_list()
+        |> Enum.frequencies()
+        |> Enum.max_by(fn {_, value} -> value end)
+        |> elem(0)
+      end)
 
     epsilon_decimal =
       gama
-      |> epsilon()
-      |> Enum.reduce("", fn a, acc -> "#{acc}#{a}" end)
+      |> Enum.map(fn
+        "1" -> "0"
+        "0" -> "1"
+      end)
+      |> Enum.join()
       |> String.to_integer(2)
 
     gama_decimal =
       gama
-      |> Enum.reduce("", fn a, acc -> "#{acc}#{a}" end)
+      |> Enum.join()
       |> String.to_integer(2)
 
     epsilon_decimal * gama_decimal
   end
 
-  @doc false
-  def epsilon(gama) do
-    gama
-    |> Enum.map(&((&1 - 1) * -1))
-  end
-
-  defp gama(stream) do
-    stream
-    |> Enum.reduce({[], 0}, fn
-      line, {[], 0} ->
-        list =
-          String.codepoints(line)
-          |> Enum.map(&String.to_integer/1)
-
-        {list, 1}
-
-      line, {state, count} ->
-        {zip_and_sum(line, state), count + 1}
-    end)
-    |> convert()
-  end
-
-  @doc false
-  def zip_and_sum(line, state) do
-    String.codepoints(line)
-    |> Enum.map(&String.to_integer/1)
-    |> Enum.zip(state)
-    |> Enum.map(fn {a, b} ->
-      a + b
-    end)
-  end
-
-  @doc false
-  def convert({list, count}) do
-    list
-    |> Enum.map(fn number ->
-      if number >= count / 2, do: 1, else: 0
-    end)
+  @doc """
+  - To find oxygen generator rating, determine the most common value (0 or 1) in the current bit position, and keep only numbers with that bit in that position. If 0 and 1 are equally common, keep values with a 1 in the position being considered.
+  - To find CO2 scrubber rating, determine the least common value (0 or 1) in the current bit position, and keep only numbers with that bit in that position. If 0 and 1 are equally common, keep values with a 0 in the position being considered.
+  """
+  def part_two do
   end
 end

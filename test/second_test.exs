@@ -23,7 +23,7 @@ defmodule SecondTest do
   end
 
   test "compute/1 with puzzle part 1" do
-    assert 150 ==
+    assert 1_727_835 ==
              "fixture/second.txt"
              |> Second.read_file!()
              |> Second.compute()
