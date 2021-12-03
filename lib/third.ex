@@ -41,10 +41,58 @@ defmodule Third do
     epsilon_decimal * gama_decimal
   end
 
-  @doc """
-  - To find oxygen generator rating, determine the most common value (0 or 1) in the current bit position, and keep only numbers with that bit in that position. If 0 and 1 are equally common, keep values with a 1 in the position being considered.
-  - To find CO2 scrubber rating, determine the least common value (0 or 1) in the current bit position, and keep only numbers with that bit in that position. If 0 and 1 are equally common, keep values with a 0 in the position being considered.
-  """
-  def part_two do
+  def part_two(pathfilename) do
+    list =
+      File.stream!(pathfilename)
+      |> Stream.map(&String.trim/1)
+      |> Stream.map(&String.split(&1, "", trim: true))
+
+    o2(list, 0) * co2(list, 0)
+  end
+
+  def o2([one], _), do: one |> Enum.join() |> String.to_integer(2)
+
+  def o2(list, i) do
+    bit =
+      list
+      |> Enum.zip()
+      |> Enum.map(&Tuple.to_list/1)
+      |> then(&Enum.at(&1, i))
+      |> Enum.frequencies()
+      |> then(fn %{"0" => a, "1" => b} ->
+        cond do
+          a > b -> "0"
+          true -> "1"
+        end
+      end)
+
+    new_list =
+      list
+      |> Enum.filter(&(Enum.at(&1, i) == bit))
+
+    o2(new_list, i + 1)
+  end
+
+  def co2([one], _), do: one |> Enum.join() |> String.to_integer(2)
+
+  def co2(list, i) do
+    bit =
+      list
+      |> Enum.zip()
+      |> Enum.map(&Tuple.to_list/1)
+      |> then(&Enum.at(&1, i))
+      |> Enum.frequencies()
+      |> then(fn %{"0" => a, "1" => b} ->
+        cond do
+          a > b -> "1"
+          true -> "0"
+        end
+      end)
+
+    new_list =
+      list
+      |> Enum.filter(&(Enum.at(&1, i) == bit))
+
+    co2(new_list, i + 1)
   end
 end
