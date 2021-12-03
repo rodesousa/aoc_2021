@@ -1,3 +1,9 @@
+defmodule SecondAim do
+  defstruct position: 0, depth: 0, aim: 0
+
+  @type t :: [position: integer, depth: integer, aim: integer]
+end
+
 defmodule Second do
   @moduledoc """
   https://adventofcode.com/2021/day/2 
@@ -40,12 +46,59 @@ defmodule Second do
     measure.depth * measure.position
   end
 
-  def perform(["forward", value], measure),
+  defp perform(["forward", value], measure),
     do: %Second{measure | position: measure.position + String.to_integer(value)}
 
-  def perform(["down", value], measure),
+  defp perform(["down", value], measure),
     do: %Second{measure | depth: measure.depth + String.to_integer(value)}
 
-  def perform(["up", value], measure),
+  defp perform(["up", value], measure),
     do: %Second{measure | depth: measure.depth - String.to_integer(value)}
+
+  @doc """
+  - down X increases your aim by X units.
+  - up X decreases your aim by X units.
+  - forward X does two things:
+      It increases your horizontal position by X units.
+      It increases your depth by your aim multiplied by X.
+
+  Multiply the position and depth
+  """
+  @spec compute_aim(list) :: integer
+  def compute_aim(list) do
+    measure =
+      Enum.reduce(list, %SecondAim{}, fn command, acc ->
+        perform_aim(command, acc)
+      end)
+
+    measure.depth * measure.position
+  end
+
+  defp perform_aim(["forward", value], measure) do
+    value = String.to_integer(value)
+
+    %SecondAim{
+      measure
+      | position: measure.position + value,
+        depth: measure.depth + measure.aim * value
+    }
+  end
+
+  defp perform_aim(["down", value], measure) do
+    value = String.to_integer(value)
+
+    %SecondAim{
+      measure
+      | aim: measure.aim + value
+    }
+  end
+
+  defp perform_aim(["up", value], measure) do
+    value = String.to_integer(value)
+
+    %SecondAim{
+      measure
+      | aim: measure.aim - value
+    }
+  end
 end
