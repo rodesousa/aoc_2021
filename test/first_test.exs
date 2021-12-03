@@ -30,4 +30,15 @@ defmodule FirstTest do
              |> First.read_file!()
              |> First.count_larger_than_previous_measurement()
   end
+
+  test "count_in_slide_window/1 with simple input" do
+    assert 5 == First.count_in_slide_window([199, 200, 208, 210, 200, 207, 240, 269, 260, 263])
+  end
+
+  test "count_in_slide_window/1 with puzzle input" do
+    assert 1600 ==
+             "fixture/first_part_two.txt"
+             |> First.read_file!()
+             |> First.count_in_slide_window()
+  end
 end

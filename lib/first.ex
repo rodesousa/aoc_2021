@@ -37,4 +37,38 @@ defmodule First do
 
     count
   end
+
+  @doc """
+  Count the number of times the sum of measurements in this sliding window (3) increases
+  """
+  @spec count_in_slide_window(integer) :: integer
+  def count_in_slide_window(list, old_measure \\ nil, count \\ 0)
+
+  def count_in_slide_window(list, nil, _count) do
+    measure = Enum.take(list, 3)
+    new_list = Enum.drop(list, 1)
+    count_in_slide_window(new_list, measure, 0)
+  end
+
+  def count_in_slide_window(list, [_a, _b, _c] = old_measure, count) do
+    measure = Enum.take(list, 3)
+
+    case length(measure) == 3 do
+      true ->
+        new_sum = Enum.reduce(measure, 0, &(&1 + &2))
+        old_sum = Enum.reduce(old_measure, 0, &(&1 + &2))
+        new_list = Enum.drop(list, 1)
+
+        if new_sum > old_sum do
+          count_in_slide_window(new_list, measure, count + 1)
+        else
+          count_in_slide_window(new_list, measure, count)
+        end
+
+      false ->
+        count
+    end
+  end
+
+  def count_in_slide_window(_list, _measure, count), do: count
 end
